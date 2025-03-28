@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose(); // Use verbose for more detailed logs
+const fs = require('fs-extra'); // For file system operations
+const { v4: uuidv4 } = require('uuid'); // For generating unique filenames
 
 // --- Database Setup ---
 const dbPath = path.join(__dirname, 'database', 'expenses.db');
@@ -189,5 +191,43 @@ ipcMain.handle('db:addProject', async (event, name) => {
   });
 });
 
+// Save receipt image (expects base64 data)
+ipcMain.handle('fs:saveImage', async (event, base64Data) => {
+  try {
+    if (!base64Data || typeof base64Data !== 'string') {
+      throw new Error('Invalid image data provided.');
+    }
 
-// Add other handlers here later (getExpenses, addExpense, processImage, saveImage...)
+    // Basic check for base64 format (can be improved)
+    const base64Match = base64Data.match(/^data:image\/([a-zA-Z]*);base64,(.*)$/);
+    if (!base64Match) {
+      throw new Error('Image data is not in expected base64 format (data:image/...).');
+    }
+
+    const fileExtension = base64Match[1] || 'png'; // Default to png if type is missing
+    const imageBuffer = Buffer.from(base64Match[2], 'base64');
+    const uniqueFilename = `${uuidv4()}.${fileExtension}`;
+    const receiptsDir = path.join(__dirname, 'receipts');
+    const filePath = path.join(receiptsDir, uniqueFilename);
+
+    // Ensure the receipts directory exists
+    await fs.ensureDir(receiptsDir);
+
+    // Write the file
+    await fs.writeFile(filePath, imageBuffer);
+
+    console.log(`Saved receipt image to: ${filePath}`);
+
+    // Return the relative path for storage in the database
+    const relativePath = path.join('receipts', uniqueFilename);
+    return relativePath;
+
+  } catch (error) {
+    console.error('Error saving image:', error.message);
+    // Rethrow or return an error object/message to the renderer
+    throw new Error(`Failed to save image: ${error.message}`);
+  }
+});
+
+
+// Add other handlers here later (getExpenses, addExpense, processImage...)

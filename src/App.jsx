@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AddProjectForm from './components/AddProjectForm'; // Import the form component
+import ExpenseForm from './components/ExpenseForm'; // Import the expense form
 
 function App() {
   // Example state to hold projects
@@ -66,7 +67,11 @@ function App() {
 
       <hr />
       <AddProjectForm onProjectAdded={handleProjectAdded} />
-      <hr />
+      <hr style={{ margin: '2rem 0' }}/>
+
+      {/* Render Expense Form, passing projects list */}
+      <ExpenseForm projects={projects} />
+      {/* TODO: Add onExpenseAdded handler if needed */}
 
     </div>
   );
