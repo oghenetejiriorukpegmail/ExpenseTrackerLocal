@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSP Policy: Restrict resource loading for security -->
+    <!-- Adjust 'self' and add specific sources if needed (e.g., for fonts, external CSS) -->
+    <!-- 'unsafe-inline' for style-src might be needed depending on CSS-in-JS or inline styles, but try to avoid -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    <title>Expense Tracker</title>
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!-- This is where React will mount the application -->
+    <!-- We'll need a build step or manual inclusion for the React bundle -->
+    <!-- For now, we'll assume a build process puts the bundle here or we link it -->
+     <script type="module" src="./index.js"></script> <!-- Assuming index.js is the entry point -->
+</body>
+</html>
