@@ -4,7 +4,12 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      // Use the automatic runtime (default in Vite >= 2)
+      jsxRuntime: 'automatic',
+    }),
+  ],
   // Set the root directory where index.html is located
   root: path.resolve(__dirname, 'src'),
   // Base public path when served in development or production.
