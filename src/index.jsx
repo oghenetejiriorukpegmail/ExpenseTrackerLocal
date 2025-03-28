@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// We'll create App.js next
+// Import the main App component (App.jsx)
 import App from './App';
 // Basic styling (optional, create this file if needed)
 // import './styles/global.css';

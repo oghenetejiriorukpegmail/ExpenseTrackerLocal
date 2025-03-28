@@ -76,11 +76,10 @@ function createWindow() {
   });
 
   // Load the index.html of the app.
-  // In development, you might load from a dev server (like Create React App)
-  // For simplicity now, we'll load a static file. We'll create this next.
-  mainWindow.loadFile(path.join(__dirname, 'src/index.html')); // Assuming React builds here or we place a simple HTML file
+  // Load the built index.html file from the 'dist' directory created by Vite.
+  mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
 
-  // Open the DevTools.
+  // Open the DevTools (optional, uncomment for debugging)
   // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
@@ -151,4 +150,44 @@ ipcMain.handle('db:getProjects', async (event) => {
   });
 });
 
-// Add other handlers here later (addProject, getExpenses, addExpense, processImage, saveImage...)
+// Add a new project
+ipcMain.handle('db:addProject', async (event, name) => {
+  return new Promise((resolve, reject) => {
+    if (!db || !db.open) {
+      return reject(new Error('Database not initialized or closed.'));
+    }
+    if (!name || typeof name !== 'string' || name.trim() === '') {
+      return reject(new Error('Invalid project name provided.'));
+    }
+
+    const sql = `INSERT INTO projects (name) VALUES (?)`;
+    // Use function() syntax for callback to access 'this.lastID'
+    db.run(sql, [name.trim()], function(err) {
+      if (err) {
+        console.error('Error adding project:', err.message);
+        // Handle specific errors like UNIQUE constraint
+        if (err.code === 'SQLITE_CONSTRAINT') {
+           reject(new Error(`Project name "${name.trim()}" already exists.`));
+        } else {
+           reject(err);
+        }
+      } else {
+        // Return the newly created project object
+        const newProjectId = this.lastID;
+        console.log(`Added project: ${name.trim()} with ID: ${newProjectId}`);
+        // Fetch the newly added project to return complete data
+        db.get('SELECT id, name, created_at FROM projects WHERE id = ?', [newProjectId], (getErr, row) => {
+            if (getErr) {
+                console.error('Error fetching newly added project:', getErr.message);
+                reject(getErr);
+            } else {
+                resolve(row);
+            }
+        });
+      }
+    });
+  });
+});
+
+
+// Add other handlers here later (getExpenses, addExpense, processImage, saveImage...)

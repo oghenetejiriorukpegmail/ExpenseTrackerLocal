@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AddProjectForm from './components/AddProjectForm'; // Import the form component
 
 function App() {
   // Example state to hold projects
@@ -31,6 +32,16 @@ function App() {
     fetchProjects();
   }, []); // Empty dependency array means this runs once on mount
 
+  // Callback function to update projects list when a new one is added
+  const handleProjectAdded = (newProject) => {
+    if (newProject && newProject.id) {
+      // Add the new project and sort the list alphabetically by name
+      setProjects((prevProjects) =>
+        [...prevProjects, newProject].sort((a, b) => a.name.localeCompare(b.name))
+      );
+    }
+  };
+
   return (
     <div className="App">
       <h1>Expense Tracker (Local V1)</h1>
@@ -53,8 +64,9 @@ function App() {
         </ul>
       )}
 
-      {/* Placeholder for adding a project - we'll make this a component */}
-      {/* <AddProjectForm onProjectAdded={handleProjectAdded} /> */}
+      <hr />
+      <AddProjectForm onProjectAdded={handleProjectAdded} />
+      <hr />
 
     </div>
   );

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "npm run build && electron .",
+    "build": "vite build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,7 +12,9 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "electron": "^35.1.2"
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^35.1.2",
+    "vite": "^6.2.3"
   },
   "dependencies": {
     "fs-extra": "^11.3.0",
