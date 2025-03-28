@@ -1,15 +1,15 @@
-import React from 'react'; // Import only React
+import React, { useState, useEffect } from 'react'; // Revert to named imports
 import AddProjectForm from './components/AddProjectForm'; // Import the form component
 import ExpenseForm from './components/ExpenseForm'; // Import the expense form
 
 function App() {
   // Example state to hold projects
-  const [projects, setProjects] = React.useState([]); // Use React.useState
-  const [loading, setLoading] = React.useState(true); // Use React.useState
-  const [error, setError] = React.useState(null); // Use React.useState
+  const [projects, setProjects] = useState([]); // Revert to useState
+  const [loading, setLoading] = useState(true); // Revert to useState
+  const [error, setError] = useState(null); // Revert to useState
 
   // Example: Fetch projects when the component mounts
-  React.useEffect(() => { // Use React.useEffect
+  useEffect(() => { // Revert to useEffect
     const fetchProjects = async () => {
       try {
         setLoading(true);
